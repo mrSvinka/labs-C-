@@ -10,79 +10,94 @@
 
 
 #include <iostream>
-#include <queue>
+#include <climits>
 using namespace std;
 
-struct Node { int x, y, steps; }; //храним координаты и  кол-во шагов.
+#define N_MAX 100
+#define M_MAX 100
+using ushort = unsigned short;
 
-int minSteps(char grid[100][100], int n, int m) 
+struct Labyrinth 
 {
-    Node start, end;
-    bool foundS = false, foundE = false;
+    char field[N_MAX][M_MAX];
+    int steps[N_MAX][M_MAX];
+    ushort N, M;
+    bool end_found = false;
 
-    // Поиск начальной и конечной точек
-    for (int i = 0; i < n; i++) 
+    Labyrinth(ushort n, ushort m) : N(n), M(m) 
     {
-        for (int j = 0; j < m; j++) 
+        for (int i = 0; i < N; ++i)
+            for (int j = 0; j < M; ++j)
+                steps[i][j] = INT_MAX;
+    }
+
+    void search(ushort i, ushort j, int step) 
+    {
+        if (i >= N || j >= M || field[i][j] == '#' || steps[i][j] <= step)
+            return;
+        
+        steps[i][j] = step;
+        
+        if (field[i][j] == 'E') 
         {
-            if (grid[i][j] == 'S') 
-            {
-                start = {i, j, 0};
-                foundS = true;
-            } else if (grid[i][j] == 'E') 
-            {
-                end = {i, j, 0};
-                foundE = true;
-            }
+            end_found = true;
+            return;
+        }
+
+        const int dx[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+        const int dy[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+        for (int k = 0; k < 8; ++k) 
+        {
+            int ni = i + dx[k];
+            int nj = j + dy[k];
+            if (ni >= 0 && ni < N && nj >= 0 && nj < M)
+                search(ni, nj, step + 1);
         }
     }
-    if (!foundS || !foundE) return -1; // нет точки, возвращаем -1
 
-    //посещенные клетки
-    bool visited[100][100] = {false};
-    queue<Node> q; //поиска в ширину
-    q.push(start); //старт
-    visited[start.x][start.y] = true; //стартовали
-//направления движения
-    int dx[] = {-1, -1, -1, 0, 0, 1, 1, 1};
-    int dy[] = {-1, 0, 1, -1, 1, -1, 0, 1};
-
-    while (!q.empty()) 
+    int find_shortest_path() 
     {
-        Node curr = q.front(); //взяли клетку
-        q.pop(); //убрали из очереди на праверку
-
-        if (curr.x == end.x && curr.y == end.y)
-            return curr.steps; //финиш
-
-        for (int i = 0; i < 8; i++) 
-        {   //точка следом
-            int nx = curr.x + dx[i];
-            int ny = curr.y + dy[i];
-            if (nx >= 0 && nx < n && ny >= 0 && ny < m && //держим себя в рамках
-                !visited[nx][ny] && grid[nx][ny] != '#') //не тыкаемся в стены
+        ushort start_i = 0, start_j = 0;
+        bool found = false;
+        
+        for (ushort i = 0; i < N; ++i)
+            for (ushort j = 0; j < M; ++j)
+                if (field[i][j] == 'S') 
                 {
-                visited[nx][ny] = true;
-                q.push({nx, ny, curr.steps + 1}); //очередь
-            }
-        }
+                    start_i = i;
+                    start_j = j;
+                    found = true;
+                }
+        
+        if (!found) return -1;
+        
+        search(start_i, start_j, 0);
+        
+        for (ushort i = 0; i < N; ++i)
+            for (ushort j = 0; j < M; ++j)
+                if (field[i][j] == 'E')
+                    return steps[i][j] == INT_MAX ? -1 : steps[i][j];
+        
+        return -1;
     }
-    return -1;
-}
+};
 
 int main() 
 {
-    int n, m;
-    char grid[100][100];
-
+    ushort n, m;
     cout << "Введите размеры поля (N M): ";
     cin >> n >> m;
+    
+    Labyrinth lab(n, m);
     cout << "Введите поле:" << endl;
-
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < m; j++)
-            cin >> grid[i][j];
-
-    cout << "Минимум шагов: " << minSteps(grid, n, m) << endl;
+    
+    for (ushort i = 0; i < n; ++i)
+        for (ushort j = 0; j < m; ++j)
+            cin >> lab.field[i][j];
+    
+    int result = lab.find_shortest_path();
+    cout << "Минимум шагов: " << result << endl;
+    
     return 0;
 }
