@@ -137,7 +137,7 @@ public:
     }
 
     // 5. Оператор + (Оператор использует +=, создавая временную копию левого операнда)
-    friend BigInt operator+(const BigInt& a, const BigInt& b) 
+    BigInt operator+(const BigInt& a, const BigInt& b) 
     {
         BigInt result(a);
         return result += b;
@@ -174,7 +174,7 @@ public:
     }
 
     // 6. Оператор *
-    friend BigInt operator*(const BigInt& a, const BigInt& b) 
+    BigInt operator*(const BigInt& a, const BigInt& b) 
     {
         BigInt result(a);
         return result *= b;
@@ -182,7 +182,7 @@ public:
 
 
     // 7. Операторы сравнения
-    friend bool operator==(const BigInt& a, const BigInt& b) 
+    bool operator==(const BigInt& a, const BigInt& b) 
     {
         if (a.length != b.length) return false;
         for (size_t i = 0; i < a.length; i++)
@@ -190,12 +190,12 @@ public:
         return true;
     }
 //Числа равны, если совпадают все цифры
-    friend bool operator!=(const BigInt& a, const BigInt& b) 
+    bool operator!=(const BigInt& a, const BigInt& b) 
     {
         return !(a == b);
     }
 
-    friend bool operator<(const BigInt& a, const BigInt& b) 
+    bool operator<(const BigInt& a, const BigInt& b) 
     {
         if (a.length != b.length) return a.length < b.length;
         for (int i = a.length-1; i >= 0; i--)
@@ -204,9 +204,9 @@ public:
         return false;
     }
 //Сравнение начинается со старших разрядов
-    friend bool operator>(const BigInt& a, const BigInt& b) 
+    bool operator>(const BigInt& b) 
     {
-        return b < a;
+        return b < *this;
     }
 
 
@@ -226,25 +226,6 @@ public:
         return is;// Возвращаем поток для цепочечных операций
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
