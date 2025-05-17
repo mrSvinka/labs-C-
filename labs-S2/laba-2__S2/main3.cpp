@@ -8,96 +8,89 @@
 */
 
 
-
 #include <iostream>
 #include <climits>
-using namespace std;
-
 #define N_MAX 100
 #define M_MAX 100
-using ushort = unsigned short;
+using namespace std;
+
 
 struct Labyrinth 
-{
+{    // хроним данные
     char field[N_MAX][M_MAX];
-    int steps[N_MAX][M_MAX];
-    ushort N, M;
-    bool end_found = false;
+    int steps[N_MAX][M_MAX]; //мин шаги
+    int N, M;  
 
-    Labyrinth(ushort n, ushort m) : N(n), M(m) 
-    {
-        for (int i = 0; i < N; ++i)
-            for (int j = 0; j < M; ++j)
+    Labyrinth(int n, int m) : N(n), M(m) 
+    {  // нициализирует размер
+        for(int i = 0; i < N; ++i)
+            for(int j = 0; j < M; ++j)
                 steps[i][j] = INT_MAX;
     }
+    
 
-    void search(ushort i, ushort j, int step) 
-    {
-        if (i >= N || j >= M || field[i][j] == '#' || steps[i][j] <= step)
-            return;
-        
+    //поиска пути
+    void search(int i, int j, int step) 
+    {   // Проверка выхода за границы лабиринта
+        if(i < 0 || i >= N || j < 0 || j >= M) return;
+        // слишком длинные и не верные пути
+        if(steps[i][j] <= step || field[i][j] == '#') return;
+        // Запись текущего количества шагов
         steps[i][j] = step;
-        
-        if (field[i][j] == 'E') 
-        {
-            end_found = true;
-            return;
-        }
+        // Если достигли выхода
+        if(field[i][j] == 'E') return;
 
-        const int dx[] = {-1, -1, -1, 0, 0, 1, 1, 1};
-        const int dy[] = {-1, 0, 1, -1, 1, -1, 0, 1};
-
-        for (int k = 0; k < 8; ++k) 
-        {
-            int ni = i + dx[k];
-            int nj = j + dy[k];
-            if (ni >= 0 && ni < N && nj >= 0 && nj < M)
-                search(ni, nj, step + 1);
-        }
-    }
-
-    int find_shortest_path() 
-    {
-        ushort start_i = 0, start_j = 0;
-        bool found = false;
-        
-        for (ushort i = 0; i < N; ++i)
-            for (ushort j = 0; j < M; ++j)
-                if (field[i][j] == 'S') 
-                {
-                    start_i = i;
-                    start_j = j;
-                    found = true;
-                }
-        
-        if (!found) return -1;
-        
-        search(start_i, start_j, 0);
-        
-        for (ushort i = 0; i < N; ++i)
-            for (ushort j = 0; j < M; ++j)
-                if (field[i][j] == 'E')
-                    return steps[i][j] == INT_MAX ? -1 : steps[i][j];
-        
-        return -1;
+        // направления
+        search(i+1, j,   step+1);
+        search(i-1, j,   step+1);
+        search(i,   j+1, step+1);
+        search(i,   j-1, step+1);
+        search(i+1, j+1, step+1);
+        search(i+1, j-1, step+1);
+        search(i-1, j+1, step+1);
+        search(i-1, j-1, step+1);
     }
 };
 
+
+
 int main() 
 {
-    ushort n, m;
-    cout << "Введите размеры поля (N M): ";
+    int n, m;
+    cout << "Введите размеры (N M): ";
     cin >> n >> m;
     
+
     Labyrinth lab(n, m);
-    cout << "Введите поле:" << endl;
     
-    for (ushort i = 0; i < n; ++i)
-        for (ushort j = 0; j < m; ++j)
+
+    cout << "Введите лабиринт:\n";
+    int start_i = -1, start_j = -1;
+    for(int i = 0; i < n; ++i) 
+    {
+        for(int j = 0; j < m; ++j) 
+        {
             cin >> lab.field[i][j];
+            if(lab.field[i][j] == 'S') 
+            {
+                start_i = i;
+                start_j = j;
+            }
+        }
+    }
+
+
+    // Запуск поиска из стартовой позиции
+    lab.search(start_i, start_j, 0);
     
-    int result = lab.find_shortest_path();
-    cout << "Минимум шагов: " << result << endl;
+    // Поиск минимального пути до E
+    int min_steps = INT_MAX;
+    for(int i = 0; i < n; ++i)
+        for(int j = 0; j < m; ++j)
+            if(lab.field[i][j] == 'E' && lab.steps[i][j] < min_steps)
+                min_steps = lab.steps[i][j];
+    
+    cout << "Результат: " << (min_steps != INT_MAX ? min_steps : -1) << endl;
     
     return 0;
 }
