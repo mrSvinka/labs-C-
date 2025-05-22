@@ -12,48 +12,50 @@
 
 
 #include <SFML/Graphics.hpp>
+using namespace sf;
 
 int main()
 {
     // Создание окна
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Графические примитивы");
+    RenderWindow window(VideoMode(800, 600),"");
 
     // Создание фигур
-    // 1. Круг (радиус 50, красный)
-    sf::CircleShape circle(50);
-    circle.setFillColor(sf::Color::Red);
-    circle.setPosition(100, 100);
-    circle.setRotation(45); // Поворот на 45 градусов
+    // 1. Круг 
+    CircleShape circle(50);
+    circle.setFillColor(Color::Red);
+    circle.setPosition(411, 51);
+    circle.setRotation(46);
 
-    // 2. Прямоугольник (100x200, зелёный)
-    sf::RectangleShape rectangle(sf::Vector2f(100, 200));
-    rectangle.setFillColor(sf::Color::Green);
-    rectangle.setPosition(400, 200);
-    rectangle.setRotation(-30); // Поворот на -30 градусов
+    // 2. Прямоугольник
+    RectangleShape rectangle(Vector2f(170, 288));
+    rectangle.setFillColor(Color::Green);
+    rectangle.setPosition(333, 222);
+    rectangle.setRotation(-30);
 
-    // 3. Треугольник (синий)
-    sf::ConvexShape triangle;
+    // 3. Треугольник 
+    ConvexShape triangle;
     triangle.setPointCount(3);
-    triangle.setPoint(0, sf::Vector2f(0, 0));
-    triangle.setPoint(1, sf::Vector2f(100, 0));
-    triangle.setPoint(2, sf::Vector2f(50, 100));
-    triangle.setFillColor(sf::Color::Blue);
-    triangle.setPosition(600, 400);
-    triangle.setRotation(15); // Поворот на 15 градусов
+    triangle.setPoint(0, Vector2f(23, 5));
+    triangle.setPoint(1, Vector2f(198, 4));
+    triangle.setPoint(2, Vector2f(54, 101));
+    triangle.setFillColor(Color::Blue);
+    triangle.setPosition(566, 433);
+    triangle.setRotation(15);
 
-    // Главный цикл приложения
+
+    // Основная часть
     while (window.isOpen())
     {
-        // Обработка событий
-        sf::Event event;
+        // Обработка 
+        Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            if (event.type == Event::Closed)
                 window.close();
         }
 
         // Очистка экрана
-        window.clear(sf::Color::White);
+        window.clear(Color::White);
 
         // Отрисовка фигур
         window.draw(circle);
