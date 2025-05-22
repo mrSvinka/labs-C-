@@ -102,12 +102,31 @@ public:
     }
 
 
-    // умножение с присваиванием, только для квадратных матриц
-    Matrix& operator*=(const Matrix& rhs) 
-	{
-        static_assert(N == M, "*= только для квадратных матриц");
-        return *this = *this * rhs;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+// Умножение с присваиванием:   (N×M) *=  (M×M)  результат: (N×M)
+Matrix& operator*=(const Matrix<T, M, M>& rhs) 
+{
+    static_assert(M > 0);
+    *this = *this * rhs; // Используем оператор *
+    return *this;
+}
 
 
     // Префиксный ++
@@ -129,10 +148,10 @@ public:
     }
 
 
-     // Метод вычисления определителя (только для квадратных матриц)
+     // Метод вычисления определителя 
     T determinant() const 
 	{
-        static_assert(N == M, "Определитель только для квадратных матриц");
+        static_assert(N == M);
         
         // Формулы для матриц 1x1 - 3x3
         if constexpr(N == 1) return data[0][0];
