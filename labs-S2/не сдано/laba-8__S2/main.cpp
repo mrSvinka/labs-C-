@@ -48,10 +48,10 @@ int main()
     {
         // Обработка 
         Event event;
-        while (window.pollEvent(event))
+        while (window.pollEvent(event)) // Перебор всех событий в очереди
         {
-            if (event.type == Event::Closed)
-                window.close();
+            if (event.type == Event::Closed) // Нажали на крестик
+                window.close(); // Закрыть окно
         }
 
         // Очистка экрана

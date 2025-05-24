@@ -4,7 +4,8 @@
 
 #include <SFML/Graphics.hpp>
 
-class Potato {
+class Potato 
+{
 public:
     sf::Vector2f position;
     sf::Vector2f direction;

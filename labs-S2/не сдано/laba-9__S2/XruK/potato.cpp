@@ -5,8 +5,10 @@
 #include <cstdlib>
 #include <iostream>
 
-Potato::Potato() : speed(6.0f), directionChangeTime(2.0f), timer(directionChangeTime) {
-    if (!texture.loadFromFile("Textures/potato.png")) {
+Potato::Potato() : speed(6.0f), directionChangeTime(2.0f), timer(directionChangeTime) 
+{
+    if (!texture.loadFromFile("Textures/potato.png")) 
+    {
         std::cerr << "ERROR: Failed to load potato.png!" << std::endl;
         exit(1);
     }
@@ -19,16 +21,21 @@ float scaleY = (CELL_SIZE * 1) / static_cast<float>(texture.getSize().y);
     respawn();
 }
 
-void Potato::respawn() {
-    do {
+void Potato::respawn() 
+{
+    do 
+    {
         position = sf::Vector2f(rand() % GRID_SIZE, rand() % GRID_SIZE);
-    } while (isPositionInHole(position));
+    } 
+    while (isPositionInHole(position));
     randomizeDirection();
 }
 
-void Potato::update(float deltaTime) {
+void Potato::update(float deltaTime) 
+{
     timer -= deltaTime;
-    if (timer <= 0) {
+    if (timer <= 0) 
+    {
         randomizeDirection();
         timer = directionChangeTime;
     }
@@ -37,19 +44,24 @@ void Potato::update(float deltaTime) {
     newPos.x = clamp(newPos.x, 0.0f, static_cast<float>(GRID_SIZE - 1));
     newPos.y = clamp(newPos.y, 0.0f, static_cast<float>(GRID_SIZE - 1));
 
-    if (!isPositionInHole(newPos)) {
+    if (!isPositionInHole(newPos)) 
+    {
         position = newPos;
-    } else {
+    } 
+    else 
+    {
         randomizeDirection();
     }
 }
 
-void Potato::draw(sf::RenderWindow& window) {
+void Potato::draw(sf::RenderWindow& window) 
+{
     sprite.setPosition(position.x * CELL_SIZE, position.y * CELL_SIZE);
     window.draw(sprite);
 }
 
-void Potato::randomizeDirection() {
+void Potato::randomizeDirection() 
+{
     direction = sf::Vector2f(
         (rand() % 200 - 100) / 100.0f,
         (rand() % 200 - 100) / 100.0f
@@ -58,6 +70,7 @@ void Potato::randomizeDirection() {
     if (length > 0) direction /= length;
 }
 
-float Potato::clamp(float value, float min, float max) {
+float Potato::clamp(float value, float min, float max) 
+{
     return std::max(min, std::min(value, max));
 }

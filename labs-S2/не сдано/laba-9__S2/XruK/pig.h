@@ -4,7 +4,8 @@
 
 #include <SFML/Graphics.hpp>
 
-class Pig {
+class Pig 
+{
 public:
     sf::Vector2f position;
     float speed;

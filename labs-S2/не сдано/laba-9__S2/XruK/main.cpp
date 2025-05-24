@@ -4,13 +4,15 @@
 #include "map.h"
 #include <iostream>
 
-int main() {
+int main() 
+{
     srand(time(nullptr));
     sf::RenderWindow window(sf::VideoMode(WINDOW_SIZE, WINDOW_SIZE), "XruK:Нажората");     
     
     // Загрузка фона
     sf::Texture mapTexture;
-    if (!mapTexture.loadFromFile("Textures/map.png")) {
+    if (!mapTexture.loadFromFile("Textures/map.png")) 
+    {
         std::cerr << "ERROR: Failed to load map.png!" << std::endl;
         return 1;
     }
@@ -28,7 +30,8 @@ int main() {
 
     // Загрузка шрифта
     sf::Font font;
-    if (!font.loadFromFile("Fonts/arial.ttf")) { 
+    if (!font.loadFromFile("Fonts/arial.ttf")) 
+    { 
         std::cerr << "ERROR: Failed to load arial.ttf!" << std::endl;
         return 1;
     }
@@ -48,22 +51,26 @@ int main() {
 
     sf::Clock clock;
 
-    while (window.isOpen()) {
+    while (window.isOpen()) 
+    {
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (window.pollEvent(event)) 
+        {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
 
         float deltaTime = clock.restart().asSeconds();
 
-        if (!gameOver) {
+        if (!gameOver) 
+        {
             pig.update(deltaTime);
             potato.update(deltaTime);
 
             // Коллизия
             if (std::hypot(pig.position.x - potato.position.x, 
-                          pig.position.y - potato.position.y) < 1.0f) {
+                          pig.position.y - potato.position.y) < 1.0f) 
+                          {
                 score++;
                 potato.respawn();
                 if (score >= 34) gameOver = true;
@@ -76,7 +83,8 @@ int main() {
         window.draw(mapSprite); // Фон
 
         // Отрисовка дыр
-        for (auto& hole : holes) {
+        for (auto& hole : holes) 
+        {
             sf::RectangleShape rect(sf::Vector2f(
                 hole.width * CELL_SIZE,
                 hole.height * CELL_SIZE
