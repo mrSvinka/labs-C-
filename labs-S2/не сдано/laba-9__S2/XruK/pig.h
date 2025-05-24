@@ -7,16 +7,16 @@
 class Pig 
 {
 public:
-    sf::Vector2f position;
-    float speed;
+    sf::Vector2f position; // Текущая позиция
+    float speed; // Скорость движения
     
     Pig();
-    void update(float deltaTime);
-    void draw(sf::RenderWindow& window);
+    void update(float deltaTime); // Обновление позиции
+    void draw(sf::RenderWindow& window); // Отрисовка
 
 private:
-    sf::Texture texture;
-    sf::Sprite sprite;
+    sf::Texture texture; // Текстура хрюндиля
+    sf::Sprite sprite; // отрисовка
     float clamp(float value, float min, float max);
 };
 

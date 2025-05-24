@@ -22,9 +22,9 @@ int main()
         WINDOW_SIZE / static_cast<float>(mapTexture.getSize().y)
     );
 
-    initMap();
-    Pig pig;
-    Potato potato;
+    initMap(); // Инициализация пней
+    Pig pig; // Создание хряка
+    Potato potato; // Создание потаты
     int score = 0;
     bool gameOver = false;
 
@@ -36,12 +36,14 @@ int main()
         return 1;
     }
 
+    // Настройка счёта
     sf::Text scoreText;
     scoreText.setFont(font);
     scoreText.setCharacterSize(24);
     scoreText.setFillColor(sf::Color::White);
     scoreText.setPosition(10, 10);
 
+    // Настройка окончания игры
     sf::Text endText;
     endText.setFont(font);
     endText.setCharacterSize(48);
@@ -51,6 +53,7 @@ int main()
 
     sf::Clock clock;
 
+    // Игровой цикл
     while (window.isOpen()) 
     {
         sf::Event event;
@@ -64,16 +67,16 @@ int main()
 
         if (!gameOver) 
         {
-            pig.update(deltaTime);
-            potato.update(deltaTime);
+            pig.update(deltaTime); // Обновление хряка
+            potato.update(deltaTime); // Обновление картохи
 
-            // Коллизия
+            // Проверка коллизии хряка и картхи
             if (std::hypot(pig.position.x - potato.position.x, 
                           pig.position.y - potato.position.y) < 1.0f) 
                           {
                 score++;
-                potato.respawn();
-                if (score >= 34) gameOver = true;
+                potato.respawn(); // Респаун картхи
+                if (score >= 34) gameOver = true; // Условие завершения игры
             }
 
             scoreText.setString("Xruk: " + std::to_string(score));
@@ -82,7 +85,7 @@ int main()
         window.clear();
         window.draw(mapSprite); // Фон
 
-        // Отрисовка дыр
+        // Отрисовка пней
         for (auto& hole : holes) 
         {
             sf::RectangleShape rect(sf::Vector2f(
@@ -90,15 +93,15 @@ int main()
                 hole.height * CELL_SIZE
             ));
             rect.setPosition(hole.left * CELL_SIZE, hole.top * CELL_SIZE);
-            rect.setFillColor(sf::Color(0, 0, 0, 0));
+            rect.setFillColor(sf::Color(0, 0, 0, 0)); // Прозрачный цвет
             window.draw(rect);
         }
 
-        pig.draw(window);
-        potato.draw(window);
-        window.draw(scoreText);
+        pig.draw(window); // Отрисовка хряка
+        potato.draw(window); // Отрисовка картхи
+        window.draw(scoreText); // Отрисовка счёта
 
-        if (gameOver) window.draw(endText);
+        if (gameOver) window.draw(endText); // Отрисовка сообщения о конце
 
         window.display();
     }
